@@ -85,3 +85,100 @@ def fix_categories(categories, edges, nodes):
     return new_categories
 
 ####### RQ1
+
+def isDirected(edges):
+    if len(set(list(edges['source'])).intersection(set(list(edges['dest'])))) > 0: # check if the source node is also in the dest nodes, in order to check if the graph is directed or not
+        return "directed"
+    else:
+        return "undirected"
+
+def check_creation_graph(edges):
+    if isDirected(edges) == "directed":
+        G = nx.DiGraph(directed=True) # the graph is directed
+    else:
+        G = nx.Graph() # the graph is undirecteddd
+    return G
+
+def create_graph(edges, pages_names, G):
+    #extract the edges list from the source and dest column from edges dataset
+    sources = list(edges['source'])
+    dests = list(edges['dest'])
+
+    for i in range(len(edges)): # add for each line of edges dataset the corresponding edge
+        G.add_node(sources[i], name = pages_names.loc[str(sources[i]), 'name']) # source node
+        G.add_node(dests[i], name = pages_names.loc[str(dests[i]), 'name']) # dest node
+        
+        G.add_edge(sources[i], dests[i], weight=1) # add edges with weight equal to one according to the professors requests
+    return G
+
+def degree_histogram_directed(G, in_degree=False, out_degree=False):
+    # save the nodes and then collect the corresponding frequencies in order to create the loglog histogram
+    nodes = G.nodes() 
+    if in_degree:
+        in_degree = dict(G.in_degree())
+        degseq=[in_degree.get(k,0) for k in nodes]
+    elif out_degree:
+        out_degree = dict(G.out_degree())
+        degseq=[out_degree.get(k,0) for k in nodes]
+    else:
+        degseq=[v for k, v in G.degree()]
+
+    dmax=max(degseq)+1
+    freq= [ 0 for d in range(dmax) ]
+    for d in degseq:
+        freq[d] += 1
+    return freq
+
+def plot_degree_distro(in_degree_freq, out_degree_freq):
+    plt.figure(figsize=(12, 8)) 
+    plt.grid(True)
+    plt.loglog(range(len(in_degree_freq)), in_degree_freq, 'ro-', label='in-degree') 
+    plt.loglog(range(len(out_degree_freq)), out_degree_freq, 'bv-', label='out-degree')
+    plt.legend(['In-degree','Out-degree'])
+    plt.xlabel('Degree')
+    plt.ylabel('Number of Nodes')
+    plt.title('Visualize the nodes degree distribution')    
+
+####### RQ2
+
+def initialization(G):
+    nodes = list(G.nodes()) # return the list of nodes
+    dist = [float('inf') for x in range(len(nodes))] # initialize the distance to inf in order to avoid the distance = 0, that means other thing
+    visited = [False for x in range(len(nodes))] # initialize the visited = False
+    return nodes, dist, visited
+
+def BFS(G, v, d):
+    nodes, dist, visited = initialization(G) # initialize the main parameters useful to do this question
+    
+    queue = [] # create queue for BFS
+    
+    # start BFS and insert the source node into the queue in order to start the algorithm
+    queue.append(v)
+    visited[nodes.index(v)] = True # check if the nodes is visited or not
+    dist[nodes.index(v)] = 0 # set the distance equal to 0.. is the first node explored!
+    
+    i = 0
+    while queue and i <= d: # check if the queue is empty and if we achieve the d clicks!
+        s = queue.pop(0)
+        
+        for neigh in nx.neighbors(G, s): # find any neighbors!
+            if visited[nodes.index(neigh)] == False:
+                visited[nodes.index(neigh)] = True
+                dist[nodes.index(neigh)] = dist[nodes.index(s)] + 1
+                queue.append(neigh)
+        i+=1
+
+    if i == d+1:
+        dist = list(filter(lambda a: a != float('inf'), dist))
+    else:
+        dist = float("inf") # I can't arrive with d clicks into any pages...
+        
+    return dist, nodes
+
+####### RQ3
+
+####### RQ4
+
+####### RQ5
+
+####### RQ6
