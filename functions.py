@@ -7,7 +7,7 @@ from tqdm import tqdm
 import networkx as nx
 import statistics
 
-####### Load the datasets
+# ###### Load the datasets
 
 def read_edges():
     edges = pd.read_csv("wikigraph_reduced.csv", sep="\t", usecols = ["0", "1"])
@@ -85,7 +85,7 @@ def fix_categories(categories, edges, nodes):
     new_categories["category"] = new_categories.category.apply(lambda x: set_category(x, categories)) # set the category not the integer value
     return new_categories
 
-####### RQ1
+# ###### RQ1
 
 def isDirected(edges):
     if len(set(list(edges['source'])).intersection(set(list(edges['dest'])))) > 0: # check if the source node is also in the dest nodes, in order to check if the graph is directed or not
@@ -140,7 +140,7 @@ def plot_degree_distro(in_degree_freq, out_degree_freq):
     plt.ylabel('Number of Nodes')
     plt.title('Visualize the nodes degree distribution')    
 
-####### RQ2
+# ###### RQ2
 
 def initialization(G):
     nodes = list(G.nodes()) # return the list of nodes
@@ -176,7 +176,7 @@ def BFS(G, v, d):
         
     return dist, nodes
 
-####### RQ3
+# ###### RQ3
 
 def get_dict(new_categories):
     #collect two main lists in order to do the union dict
@@ -271,7 +271,7 @@ def nearest_neigh(G, v): # according to the proper powerful algorithm to execute
     else:
         return f"we need a minimum of {sum(explored.values())} steps to achieve all pages" # return the min path and the distance 
 
-####### RQ4
+# ###### RQ4
 
 class Graph:
     def __init__(self, graph):
@@ -332,7 +332,7 @@ class Graph:
                 if self.graph[i][j] == 0 and self.org_graph[i][j] > 0 and visited[i]:
                     counter += 1
         return counter
-    
+
 def choose_two_categories(new_categories,G):
     c1 = str(input('Choose the first category: ')).strip()
     c1_flag = False
@@ -373,7 +373,7 @@ def random_nodes_implement(subg):
     u, v = random.sample(range(np.shape(nx.adjacency_matrix(subg))[0]), 2)
     return subg_graph.minCut(u, v)
 
-####### RQ5
+# ###### RQ5
 
 def calculate_medians(my_dict, c0, G, ctg):
     # calculate and create the dictionary of my distance respect c0
@@ -411,4 +411,31 @@ def medians_dataframe(medians, new_categories):
     
     return distance_cat0
 
-####### RQ6
+
+# ###### RQ6
+
+# +
+def graphMove(a):  # Construct transition matrix
+    b = np.transpose(a)  # b=a.T
+    c = np.zeros((a.shape), dtype=float)
+    for i in range(a.shape[0]):
+        for j in range(a.shape[1]):
+            c[i][j] = a[i][j] / (b[j].sum())  # Initial allocation
+    return c
+
+
+def firstPr(c):  # Initial pr value
+    pr = np.zeros((c.shape[0], 1), dtype=float)  # store pr matrix
+    for i in range(c.shape[0]):
+        pr[i] = float(1) / c.shape[0]
+    return pr
+
+def pageRank(p, m, v):  # calculate pageRank
+    while ((v == p * np.dot(m, v) + (
+        1 - p) * v).all() == False):  
+        #Determine whether the pr matrix converges
+        v = p * np.dot(m, v) + (1 - p) * v
+    return v
+# -
+
+
