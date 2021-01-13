@@ -1,6 +1,6 @@
 # Homework 5 - Explore Wikipedia's hyperlinks network
 
-![alt text](https://it.wikipedia.org/wiki/Wikipedia#/media/File:Wikipedia-logo-v2.svg)
+![](./images/wiki-logo.jpg)
 
 This last homework consists of to create the wikipedia graph pages given by the professors. Then that, we are focussing to clean up the datasets and then we write many different algorithms in order to solve the professors requests as:
 
