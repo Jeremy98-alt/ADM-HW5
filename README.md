@@ -1,5 +1,4 @@
 # Homework 5 - Explore Wikipedia's hyperlinks network
-*Homework made by Jeremy, Haotian and Danial*
 
 ![](./images/wiki-logo.jpg)
 
@@ -26,3 +25,5 @@ The repository consists of the following files, other than the readme.md file an
     *ADM_HW5.ipynb is the main procedure of all questions.
    
 n.b: We haven't used any other types of datasets in this homework
+
+*Homework made by Jeremy, Haotian and Danial*
