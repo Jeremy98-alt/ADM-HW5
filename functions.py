@@ -277,33 +277,31 @@ class Graph:
     def __init__(self, graph):
         self.graph = graph  # residual graph
         self.org_graph = [i[:] for i in graph]
-        self.ROW = len(graph)
-        self.COL = len(graph[0])
+        self.ROW = len(graph) # define the number of row of the graph
+        self.COL = len(graph[0]) # define the number of columns of the graph
 
-    def BFS(self, s, t,
-            parent):  # Returns true if there is a path from source 's' to sink 't' in residual graph. Also fills parent[] to store the path
-        visited = [False] * (self.ROW)
-        queue = []
-        queue.append(s)
-        visited[s] = True
-        while queue:
-            u = queue.pop(0)
+    def BFS(self, s, t, parent):  # Returns true if there is a path from source 's' to sink 't' in residual graph. Also fills parent[] to store the path
+        visited = [False] * (self.ROW) # create the visited array
+        queue = [] # create the queue
+        queue.append(s) # insert the source node into the queue
+        visited[s] = True # set as visited the node
+        while queue: # continue while the queue is empty!
+            u = queue.pop(0) # set the first node as source and put the distance values as zero
             for ind, val in enumerate(self.graph[u]):
                 if visited[ind] == False and val > 0:
                     queue.append(ind)
-                    visited[ind] = True
-                    parent[ind] = u
+                    visited[ind] = True  # set as visited the node
+                    parent[ind] = u # save the parent node of ind
         return True if visited[t] else False
 
     # Function for Depth first search Traversal of the graph
     def dfs(self, graph, s, visited):
-        visited[s] = True
+        visited[s] = True # set as visited the node
         for i in range(len(graph)):
-            if graph[s][i] > 0 and not visited[i]:
+            if graph[s][i] > 0 and not visited[i]: # check the weight of the graph 
                 self.dfs(graph, i, visited)
 
-                # Returns the min-cut of the given graph
-
+    # Returns the min-cut of the given graph
     def minCut(self, source, sink):
         parent = [-1] * (self.ROW)
         max_flow = 0
@@ -314,7 +312,7 @@ class Graph:
             path_flow = float("Inf")
             s = sink
             while (s != source):
-                path_flow = min(path_flow, self.graph[parent[s]][s])
+                path_flow = min(path_flow, self.graph[parent[s]][s]) # choose the min path
                 s = parent[s]
             max_flow += path_flow
             v = sink
@@ -333,8 +331,8 @@ class Graph:
                     counter += 1
         return counter
 
-def choose_two_categories(new_categories,G):
-    c1 = str(input('Choose the first category: ')).strip()
+def choose_two_categories(new_categories,G): # this routine is made in order to choose and create the subgraph of each category choose by the user
+    c1 = str(input('Choose the first category: ')).strip() # choose one category
     c1_flag = False
     while c1_flag == False:
         c1_nodes = list(new_categories[new_categories.category == c1]["pages list"])[0]
@@ -345,7 +343,8 @@ def choose_two_categories(new_categories,G):
             input("Choose a new category: ").strip()
         else:
             c1_flag = True
-    c2 = str(input('Choose the second category: ')).strip()
+
+    c2 = str(input('Choose the second category: ')).strip() # choose another one category
     c2_flag = False
     while c2_flag == False:
         c2_nodes = list(new_categories[new_categories.category == c2]["pages list"])[0]
@@ -356,22 +355,26 @@ def choose_two_categories(new_categories,G):
             input("Choose a new category: ").strip()
         else:
             c2_flag = True
+    
     return c1,c2
 
 def combine_subg(G,c1,c2,new_categories):
+    # catch the list of pages of two categories
     c1_nodes = list(new_categories[new_categories.category == c1]["pages list"])[0]
     c1_nodes = [int(node) for node in c1_nodes]
     c2_nodes = list(new_categories[new_categories.category == c2]["pages list"])[0]
     c2_nodes = [int(node) for node in c2_nodes]
-    subgraph_nodes = list(set(c1_nodes) | set(c2_nodes))
-    subg = G.subgraph(subgraph_nodes)
+
+    subgraph_nodes = list(set(c1_nodes) | set(c2_nodes)) # make the intersection
+    
+    subg = G.subgraph(subgraph_nodes) # create the subgraph with these nodes
     return subg
 
 def random_nodes_implement(subg):
     subg_adj = nx.adjacency_matrix(subg)
-    subg_graph = Graph(list(subg_adj.toarray()))
-    u, v = random.sample(range(np.shape(nx.adjacency_matrix(subg))[0]), 2)
-    return subg_graph.minCut(u, v)
+    subg_graph = Graph(list(subg_adj.toarray())) # consider a new graph 
+    u, v = random.sample(range(np.shape(nx.adjacency_matrix(subg))[0]), 2) # take two nodes from this new graph
+    return subg_graph.minCut(u, v) # calculate the min cut
 
 # ###### RQ5
 
@@ -414,7 +417,6 @@ def medians_dataframe(medians, new_categories):
 
 # ###### RQ6
 
-# +
 def graphMove(a):  # Construct transition matrix
     b = np.transpose(a)  # b=a.T
     c = np.zeros((a.shape), dtype=float)
@@ -436,6 +438,5 @@ def pageRank(p, m, v):  # calculate pageRank
         #Determine whether the pr matrix converges
         v = p * np.dot(m, v) + (1 - p) * v
     return v
-# -
 
 
