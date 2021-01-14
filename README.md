@@ -1,5 +1,5 @@
 # Homework 5 - Explore Wikipedia's hyperlinks network
-*### Homework made by Jeremy, Haotian and Danial*
+*Homework made by Jeremy, Haotian and Danial*
 
 ![](./images/wiki-logo.jpg)
 
