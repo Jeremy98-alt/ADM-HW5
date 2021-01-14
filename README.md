@@ -26,4 +26,4 @@ The repository consists of the following files, other than the readme.md file an
    
 n.b: We haven't used any other types of datasets in this homework
 
-*Homework made by Jeremy, Haotian and Danial*
+*Homework made by Jeremy, Haotian and Danial - Group 8*
